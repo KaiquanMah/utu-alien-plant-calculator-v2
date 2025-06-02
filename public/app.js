@@ -9,16 +9,31 @@ async function fetchData() {
   }
 }
 
+
+/////////////////////////////////////////////////////////////////
+// 2025.06.02: run fetchConstants only once instead of 3 times
+////////////////////////////////////////////////////////////////////
+let cachedConstants; // Cache for reuse
+
 // Function to fetch and process constants from 'constants.json'
 async function fetchConstants() {
   try {
+      // retrieve from cache if cachedConstants exists
+      if(cachedConstants) {
+        return cachedConstants;
+      }
+      else {
       const response = await fetch('constants.json');
       const data = await response.json();
       return data;
+      }
   } catch (error) {
       console.error('Error fetching data:', error);
   }
 }
+/////////////////////////////////////////////////////////////////
+
+
 
 //Function to fetch constants and populate pot type dropdown menu
 async function populatePottype() {
@@ -88,23 +103,26 @@ async function calculateRecommendations(potVolume, potType, plantType, season) {
   let speciesdata
   let seasondata
 
+
+  ////////////////////////////////////////////////////////////////////
+  // 2025.06.02 combine 3 for loops into 1
+  ////////////////////////////////////////////////////////////////////
   for (let i = 0; i < data.length; i++) {
     if(data[i].datatype === "pot" && data[i].name === potType) {
       potdata = data[i]
     }
-  } 
 
-  for (let i = 0; i < data.length; i++) {
     if(data[i].datatype === "species" && data[i].name === plantType) {
       speciesdata = data[i]
     }
-  }
 
-  for (let i = 0; i < data.length; i++) {
     if(data[i].datatype === "season" && data[i].name === season) {
       seasondata = data[i]
     }
-  }
+  } 
+  ////////////////////////////////////////////////////////////////////
+
+  
  
   let water = potVolume * 0.0001 *potdata.datafield_1*seasondata.datafield_1
   let fertilizer = water * seasondata.datafield_2

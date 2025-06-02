@@ -2,11 +2,10 @@
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="cache-control" content="no-store, no-cache, must-revalidate, max-age=0">
+	<meta http-equiv="cache-control" content="must-revalidate, max-age=0">
 	<meta http-equiv="expires" content="0">
-	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="pragma">
     <title>Alien Plant watering calculator</title>
-	<script src="jquery-3.7.1.min.js"></script>
 	<script src="app.js" defer></script>
 	<link rel="stylesheet" href="styles.css">
 </head>
@@ -15,7 +14,7 @@
         <h1>Alien Plant watering calculator</h1>
     </div>
 	<div id="videoplayer">
-		<video width="480" height="360" controls autoplay muted loop>
+		<video width="480" height="360" controls muted>
 			<source src="video.mp4" type="video/mp4">
 			Your browser does not support the video tag.
 		</video>
@@ -127,7 +126,6 @@
         </div>
     </div>
     <!-- Linking to the JavaScript file -->
-    <script src="app.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
           initialize();
