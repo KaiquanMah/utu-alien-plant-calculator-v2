@@ -141,78 +141,80 @@ async function findRecommendations(potVolume, potType, plantType, season) {
   ///////////////////////////////////////////////
   // 2025.06.03 Merge multiple for loops for findRecommendations
   ////////////////////////////////////////////////
+  // used in 1st IF-block
   let similarCount = 0
+  // used in 2nd IF-block
+  let morewaterCount = 0
+  let morewaterGrowthSum = 0
+  let morewaterYieldSum = 0
+  // used in 3rd IF-block
+  let similarwaterCount = 0
+  let similarwaterGrowthSum = 0
+  let similarwaterYieldSum = 0
+  // used in 4th IF-block
+  let lesswaterCount = 0
+  let lesswaterGrowthSum = 0
+  let lesswaterYieldSum = 0
+  
   for (let i = 0; i < data.length; i++) {
+
+    // keep as the 1st IF-block
+    // 1st 5 conditions
     if(data[i].pot_type === potType && 
       data[i].plant_type === plantType && 
       data[i].time_of_year === season &&
       data[i].pot_volume > (potVolume * 0.9) && 
       data[i].pot_volume > (potVolume * 1.1)) {
         similarCount = similarCount + 1
-    }
-  } 
-  document.getElementById('similar').textContent = similarCount;
 
-  let similarwaterCount = 0
-  let similarwaterGrowthSum = 0
-  let similarwaterYieldSum = 0
-  for (let i = 0; i < data.length; i++) {
-    if(data[i].pot_type === potType && 
-      data[i].plant_type === plantType && 
-      data[i].time_of_year === season && 
-      data[i].pot_volume > (potVolume * 0.9) && 
-      data[i].pot_volume > (potVolume * 1.1) && 
-      data[i].actual_water >  (data[i].recommented_water * 0.9) && 
-      data[i].actual_water >  (data[i].recommented_water * 1.1)) {
-        similarwaterCount = similarwaterCount + 1
-        similarwaterGrowthSum = similarwaterGrowthSum + data[i].growth_rate
-        similarwaterYieldSum = similarwaterYieldSum + data[i].crop_yield
-    }
-  } 
-  document.getElementById('similarwaterCount').textContent = similarwaterCount;
-  document.getElementById('similarwaterGrowthAverage').textContent = similarwaterCount ? (similarwaterGrowthSum / similarwaterCount).toFixed(1) : "-";
-  document.getElementById('similarwaterYieldAverage').textContent = similarwaterCount ? (similarwaterYieldSum / similarwaterCount).toFixed(1):"-";
+        // move original 4th IF-block up to 2nd IF-block
+        // then NEST under the 1st IF-block (reusing the 1st 5 conditions)
+        // 1st 5 conditions + 1 actual_water vs recommented_water condition
+        if(data[i].actual_water >=  (data[i].recommented_water * 1.1)) {
+            morewaterCount = morewaterCount + 1
+            morewaterGrowthSum = morewaterGrowthSum + data[i].growth_rate
+            morewaterYieldSum = morewaterYieldSum + data[i].crop_yield
 
-  let lesswaterCount = 0
-  let lesswaterGrowthSum = 0
-  let lesswaterYieldSum = 0
-  for (let i = 0; i < data.length; i++) {
-    if(data[i].pot_type === potType && 
-      data[i].plant_type === plantType && 
-      data[i].time_of_year === season && 
-      data[i].pot_volume > (potVolume * 0.9)  && 
-      data[i].pot_volume > (potVolume * 1.1) && 
-      data[i].actual_water <=  (data[i].recommented_water * 0.9) ) {
-        lesswaterCount = lesswaterCount + 1
-        lesswaterGrowthSum = lesswaterGrowthSum + data[i].growth_rate
-        lesswaterYieldSum = lesswaterYieldSum + data[i].crop_yield
-    }
-  } 
-  document.getElementById('lesswaterCount').textContent = lesswaterCount;
-  document.getElementById('lesswaterGrowthAverage').textContent = lesswaterCount ?(lesswaterGrowthSum / lesswaterCount).toFixed(1): "-";
-  document.getElementById('lesswaterYieldAverage').textContent = lesswaterCount ? (lesswaterYieldSum / lesswaterCount).toFixed(1):"-";
+            
+            // move original 2nd IF-block down to 3rd IF-block
+            // then NEST under the new 2nd IF-block (reusing all 6 conditions)
+            // 1st 5 conditions + 2 actual_water vs recommented_water conditions
+            if(data[i].actual_water >  (data[i].recommented_water * 0.9) && 
+              data[i].actual_water >  (data[i].recommented_water * 1.1)) {
+                similarwaterCount = similarwaterCount + 1
+                similarwaterGrowthSum = similarwaterGrowthSum + data[i].growth_rate
+                similarwaterYieldSum = similarwaterYieldSum + data[i].crop_yield
+            }
+        }
 
-  let morewaterCount = 0
-  let morewaterGrowthSum = 0
-  let morewaterYieldSum = 0
-  for (let i = 0; i < data.length; i++) {
-    if(data[i].pot_type === potType && 
-      data[i].plant_type === plantType && 
-      data[i].time_of_year === season && 
-      data[i].pot_volume > (potVolume * 0.9) && 
-      data[i].pot_volume > (potVolume * 1.1) &&  
-      data[i].actual_water >=  (data[i].recommented_water * 1.1)) {
-        morewaterCount = morewaterCount + 1
-        morewaterGrowthSum = morewaterGrowthSum + data[i].growth_rate
-        morewaterYieldSum = morewaterYieldSum + data[i].crop_yield
-    }
-  } 
 
+        // move original 3rd IF-block down to 4th IF-block
+        // then NEST under the 1st IF-block (reusing the 1st 5 conditions)
+        // 1st 5 conditions + 1 actual_water vs recommented_water condition
+        if(data[i].actual_water <=  (data[i].recommented_water * 0.9) ) {
+            lesswaterCount = lesswaterCount + 1
+            lesswaterGrowthSum = lesswaterGrowthSum + data[i].growth_rate
+            lesswaterYieldSum = lesswaterYieldSum + data[i].crop_yield
+        }
+    }
+  }
   
-  ///////////////////////////////////////////////
+  // assignment from 1st IF-block
+  document.getElementById('similar').textContent = similarCount;
+  // assignment from 2nd IF-block
   document.getElementById('morewaterCount').textContent = morewaterCount;
   document.getElementById('morewaterGrowthAverage').textContent = morewaterCount ? (morewaterGrowthSum / morewaterCount).toFixed(1):"-";
   document.getElementById('morewaterYieldAverage').textContent = morewaterCount ? (morewaterYieldSum / morewaterCount).toFixed(1):"-";
+  // assignment from 3rd IF-block
+  document.getElementById('similarwaterCount').textContent = similarwaterCount;
+  document.getElementById('similarwaterGrowthAverage').textContent = similarwaterCount ? (similarwaterGrowthSum / similarwaterCount).toFixed(1) : "-";
+  document.getElementById('similarwaterYieldAverage').textContent = similarwaterCount ? (similarwaterYieldSum / similarwaterCount).toFixed(1):"-";
+  // assignment from 4th IF-block
+  document.getElementById('lesswaterCount').textContent = lesswaterCount;
+  document.getElementById('lesswaterGrowthAverage').textContent = lesswaterCount ?(lesswaterGrowthSum / lesswaterCount).toFixed(1): "-";
+  document.getElementById('lesswaterYieldAverage').textContent = lesswaterCount ? (lesswaterYieldSum / lesswaterCount).toFixed(1):"-";
+ 
+  ///////////////////////////////////////////////
 
   let outputSection = document.getElementById("outputSection");
   outputSection.style.display = "block";
