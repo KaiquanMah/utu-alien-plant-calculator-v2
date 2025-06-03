@@ -13,12 +13,23 @@
     <div id="header">
         <h1>Alien Plant watering calculator</h1>
     </div>
-	<div id="videoplayer">
-		<video width="480" height="360" controls muted>
-			<source src="video.mp4" type="video/mp4">
-			Your browser does not support the video tag.
-		</video>
-	</div>
+
+    <!-- 2025.06.03 webpage initially loads a thumbnail for the video -->
+    <!-- once user clicks on the thumbnaim, then play/load the video -->
+    <div id="videoplayer" onclick="loadVideo()">
+        <img src="video_thumbnail.png" alt="Video preview" width="480" height="360">
+    </div>
+    <script>
+        function loadVideo() {
+        const player = document.getElementById('videoplayer');
+        // added lazy loading
+        player.innerHTML = `
+            <video width="480" height="360" controls muted loading="lazy">
+            <source src="video.mp4" type="video/mp4">
+            </video>
+        `;
+        }
+    </script>
 
     <!-- Form for user input -->
     <form id="inputForm" class="inputarea">
