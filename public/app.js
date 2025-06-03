@@ -1,9 +1,18 @@
 // Function to fetch and process data from 'data.json'
 async function fetchData() {
   try {
-      const response = await fetch('data.json');
-      const data = await response.json();
-      return data;
+
+      // 2025.06.03 cache data.json (large dataset)
+      const cached = localStorage.getItem('data');
+      if (cached) {
+        return JSON.parse(cached);
+      }
+      else {
+        const response = await fetch('data.json');
+        const data = await response.json();
+        localStorage.setItem('data', JSON.stringify(data));
+        return data;
+      }
   } catch (error) {
       console.error('Error fetching data:', error);
   }
@@ -18,17 +27,22 @@ let cachedConstants; // Cache for reuse
 // Function to fetch and process constants from 'constants.json'
 async function fetchConstants() {
   try {
-      // retrieve from cache if cachedConstants exists
-      if(cachedConstants) {
-        return cachedConstants;
+      // 2025.06.02-03 retrieve from cache if cachedConstants exists
+      // Check localStorage first
+      const cached = localStorage.getItem('constants');
+      if (cached) {
+        return JSON.parse(cached); // Use cached data
       }
       else {
       const response = await fetch('constants.json');
       const data = await response.json();
+
+      // Cache constants in localStorage
+      localStorage.setItem('constants', JSON.stringify(data));
       return data;
       }
   } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Error fetching constants:', error);
   }
 }
 /////////////////////////////////////////////////////////////////
