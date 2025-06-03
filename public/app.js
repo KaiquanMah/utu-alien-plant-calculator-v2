@@ -180,7 +180,7 @@ async function findRecommendations(potVolume, potType, plantType, season) {
   // let lesswaterGrowthSum = 0
   // let lesswaterYieldSum = 0
   // Approach 2 - Collect statistics at 1 go
-  const stats = {
+  let stats = {
     similar: 0,
     morewater: { count: 0, growthSum: 0, yieldSum: 0 },
     similarwater: { count: 0, growthSum: 0, yieldSum: 0 },
@@ -240,13 +240,14 @@ async function findRecommendations(potVolume, potType, plantType, season) {
     if (entry.actual_water >= entry.recommended_water * 1.1) {
       stats.morewater.count++;
       stats.morewater.growthSum += entry.growth_rate;
-      stats.morewater.yieldSum += entry.crop_yield;
-    } 
-    else if (entry.actual_water >  (entry.recommented_water * 0.9) && 
+      stats.morewater.yieldSum += entry.crop_yield; 
+
+      if ( // entry.actual_water >  (entry.recommented_water * 0.9) && 
               entry.actual_water >  (entry.recommented_water * 1.1)) {
       stats.similarwater.count++;
       stats.similarwater.growthSum += entry.growth_rate;
       stats.similarwater.yieldSum += entry.crop_yield;
+      }
     } 
     else if (entry.actual_water <= entry.recommended_water * 0.9) {
       stats.lesswater.count++;
